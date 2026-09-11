@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">DSH</string>
+    <string name="settings_title">Configuração do Servidor</string>
+    <string name="settings_url_hint">http://192.168.0.102:3080/</string>
+    <string name="settings_save">Salvar e Conectar</string>
+    <string name="settings_cancel">Cancelar</string>
+    <string name="settings_reset">Restaurar Padrão</string>
+    <string name="error_title">Não foi possível conectar</string>
+    <string name="error_message">Verifique se o dsh web está ativo e se o celular está conectado na mesma rede Wi-Fi.</string>
+    <string name="error_retry">Tentar Novamente</string>
+    <string name="error_change_url">Alterar Endereço</string>
+    <string name="url_invalid">Endereço inválido. Informe um IP/host válido com porta.</string>
+    <string name="desc_settings">Configurações</string>
+    <string name="desc_retry">Recarregar</string>
+    <string name="desc_offline">Ícone sem conexão</string>
+</resources>
