@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.widget.TextView
 import android.widget.Toast
@@ -56,14 +55,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupInsets() {
-        // Adjust settings button top margin according to system status bar / cutout
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val params = binding.btnSettings.layoutParams as? ViewGroup.MarginLayoutParams
-            params?.let {
-                it.topMargin = statusInsets.top + 16
-                binding.btnSettings.layoutParams = it
-            }
+        // Keep all content inside the safe area: respect status bar, navigation
+        // bar and display cutout margins instead of drawing under them.
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
     }
