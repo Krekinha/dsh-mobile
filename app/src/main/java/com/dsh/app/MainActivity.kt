@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.widget.TextView
 import android.widget.Toast
@@ -16,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
 import com.dsh.app.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -60,8 +59,10 @@ class MainActivity : AppCompatActivity() {
         // Adjust settings button top margin according to system status bar / cutout
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val statusInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            binding.btnSettings.updateLayoutParams<android.widget.FrameLayout.LayoutParams> {
-                updateMargins(top = statusInsets.top + 16)
+            val params = binding.btnSettings.layoutParams as? ViewGroup.MarginLayoutParams
+            params?.let {
+                it.topMargin = statusInsets.top + 16
+                binding.btnSettings.layoutParams = it
             }
             insets
         }
@@ -188,7 +189,7 @@ class MainActivity : AppCompatActivity() {
 
         MaterialAlertDialogBuilder(this)
             .setView(dialogView)
-            .setPositiveButton(R.string.settings_save, null) // Override after show for validation
+            .setPositiveButton(R.string.settings_save, null)
             .setNegativeButton(R.string.settings_cancel, null)
             .create()
             .apply {
