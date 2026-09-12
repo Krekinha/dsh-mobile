@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         setupBackNavigation()
         setupFileChooser()
         setupWebView()
-        setupSwipeRefresh()
         setupSettingsButton()
         setupErrorView()
 
@@ -120,22 +119,12 @@ class MainActivity : AppCompatActivity() {
                 // Page started loading
             },
             onPageFinishedCallback = {
-                binding.swipeRefresh.isRefreshing = false
                 showWebView()
             },
             onErrorCallback = { _, description ->
-                binding.swipeRefresh.isRefreshing = false
                 showError(description)
             }
         )
-    }
-
-    private fun setupSwipeRefresh() {
-        binding.swipeRefresh.setColorSchemeResources(R.color.primary)
-        binding.swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.surface)
-        binding.swipeRefresh.setOnRefreshListener {
-            loadCurrentUrl()
-        }
     }
 
     private fun setupSettingsButton() {
@@ -155,7 +144,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadCurrentUrl() {
         val targetUrl = appPreferences.getServerUrl()
-        binding.swipeRefresh.isRefreshing = true
         binding.webView.loadUrl(targetUrl)
     }
 

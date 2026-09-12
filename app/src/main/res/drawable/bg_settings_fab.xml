@@ -8,8 +8,8 @@
                 android:width="1dp"
                 android:color="@color/fab_stroke" />
             <size
-                android:width="40dp"
-                android:height="40dp" />
+                android:width="32dp"
+                android:height="32dp" />
         </shape>
     </item>
 </ripple>

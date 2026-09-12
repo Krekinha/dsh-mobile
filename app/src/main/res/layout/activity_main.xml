@@ -5,18 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    <!-- Direct WebView without SwipeRefreshLayout to avoid scroll conflicts -->
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:overScrollMode="never" />
 
     <!-- Error state view when server is unreachable -->
     <LinearLayout
@@ -87,18 +81,19 @@
 
     </LinearLayout>
 
-    <!-- Translucent settings button -->
+    <!-- Translucent server settings button at bottom-left -->
     <ImageButton
         android:id="@+id/btnSettings"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="76dp"
         android:background="@drawable/bg_settings_fab"
         android:contentDescription="@string/desc_settings"
         android:elevation="4dp"
+        android:padding="6dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_settings" />
+        android:src="@drawable/ic_server" />
 
 </FrameLayout>
