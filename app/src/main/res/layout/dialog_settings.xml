@@ -31,7 +31,7 @@
         android:layout_marginTop="16dp"
         app:boxStrokeColor="@color/primary"
         app:hintTextColor="@color/primary"
-        app:placeholderText="http://192.168.0.102:3080/">
+        app:placeholderText="http://192.168.0.113:3080/">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editServerUrl"
@@ -53,5 +53,98 @@
         android:text="@string/settings_reset"
         android:textColor="@color/accent"
         android:textSize="13sp" />
+
+    <!-- Divider separating server URL from updater -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/surface_variant" />
+
+    <!-- Update section header and current version info -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Atualizações do App"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtVersionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="v1.0.1"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCheckUpdates"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Verificar Atualizações"
+        android:textColor="@color/text_primary"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/ic_refresh"
+        app:iconGravity="textStart"
+        app:iconTint="@color/text_primary"
+        app:strokeColor="@color/surface_variant" />
+
+    <!-- Live status and progress container -->
+    <LinearLayout
+        android:id="@+id/layoutUpdateProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txtUpdateStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verificando atualizações..."
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBarUpdate"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/txtProgressDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnActionUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Baixar e Instalar"
+            android:textColor="@color/text_primary"
+            android:visibility="gone"
+            app:backgroundTint="@color/primary"
+            app:cornerRadius="10dp" />
+    </LinearLayout>
 
 </LinearLayout>
