@@ -2,10 +2,14 @@ package com.dsh.app
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.WebSettings
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -17,11 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doAfterTextChanged
 import com.dsh.app.databinding.ActivityMainBinding
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -166,20 +168,30 @@ class MainActivity : AppCompatActivity() {
     private fun showSettingsDialog() {
         val currentUrl = appPreferences.getServerUrl()
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
-        val editServerUrl = dialogView.findViewById<TextInputEditText>(R.id.editServerUrl)
-        val inputLayoutUrl = dialogView.findViewById<TextInputLayout>(R.id.inputLayoutUrl)
+
+        // Card 1: Server URL
+        val editServerUrl = dialogView.findViewById<EditText>(R.id.editServerUrl)
+        val txtUrlError = dialogView.findViewById<TextView>(R.id.txtUrlError)
         val btnResetDefault = dialogView.findViewById<TextView>(R.id.btnResetDefault)
 
+        // Card 2: Updates
         val txtVersionInfo = dialogView.findViewById<TextView>(R.id.txtVersionInfo)
-        val btnCheckUpdates = dialogView.findViewById<MaterialButton>(R.id.btnCheckUpdates)
+        val btnCheckUpdates = dialogView.findViewById<TextView>(R.id.btnCheckUpdates)
         val layoutUpdateProgress = dialogView.findViewById<View>(R.id.layoutUpdateProgress)
         val txtUpdateStatus = dialogView.findViewById<TextView>(R.id.txtUpdateStatus)
         val progressBarUpdate = dialogView.findViewById<ProgressBar>(R.id.progressBarUpdate)
         val txtProgressDetail = dialogView.findViewById<TextView>(R.id.txtProgressDetail)
-        val btnActionUpdate = dialogView.findViewById<MaterialButton>(R.id.btnActionUpdate)
+        val btnActionUpdate = dialogView.findViewById<TextView>(R.id.btnActionUpdate)
+
+        // Card 3: GitHub
+        val cardGitHub = dialogView.findViewById<View>(R.id.cardGitHub)
+
+        // Footer Actions
+        val btnCancel = dialogView.findViewById<TextView>(R.id.btnCancel)
+        val btnSave = dialogView.findViewById<TextView>(R.id.btnSave)
 
         val currentVersion = BuildConfig.VERSION_NAME
-        txtVersionInfo.text = "v$currentVersion"
+        txtVersionInfo.text = "Versão $currentVersion"
 
         var latestRelease: ReleaseInfo? = null
         var downloadedApkFile: File? = null
@@ -265,34 +277,48 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        cardGitHub.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Krekinha/dsh-mobile"))
+            startActivity(intent)
+        }
+
         editServerUrl.setText(currentUrl)
         editServerUrl.setSelection(currentUrl.length)
+        editServerUrl.doAfterTextChanged {
+            txtUrlError.visibility = View.GONE
+        }
 
         btnResetDefault.setOnClickListener {
             editServerUrl.setText(UrlHelper.DEFAULT_URL)
             editServerUrl.setSelection(UrlHelper.DEFAULT_URL.length)
+            txtUrlError.visibility = View.GONE
         }
 
-        MaterialAlertDialogBuilder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setView(dialogView)
-            .setPositiveButton(R.string.settings_save, null)
-            .setNegativeButton(R.string.settings_cancel, null)
             .create()
-            .apply {
-                show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                    val input = editServerUrl.text?.toString()?.trim() ?: ""
-                    if (UrlHelper.isValid(input)) {
-                        val normalized = UrlHelper.normalize(input)
-                        appPreferences.setServerUrl(normalized)
-                        dismiss()
-                        Toast.makeText(this@MainActivity, "Conectando a $normalized", Toast.LENGTH_SHORT).show()
-                        loadCurrentUrl()
-                    } else {
-                        inputLayoutUrl.error = getString(R.string.url_invalid)
-                    }
-                }
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnSave.setOnClickListener {
+            val input = editServerUrl.text?.toString()?.trim() ?: ""
+            if (UrlHelper.isValid(input)) {
+                val normalized = UrlHelper.normalize(input)
+                appPreferences.setServerUrl(normalized)
+                dialog.dismiss()
+                Toast.makeText(this@MainActivity, "Conectando a $normalized", Toast.LENGTH_SHORT).show()
+                loadCurrentUrl()
+            } else {
+                txtUrlError.text = getString(R.string.url_invalid)
+                txtUrlError.visibility = View.VISIBLE
             }
+        }
+
+        dialog.show()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

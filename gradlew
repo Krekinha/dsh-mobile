@@ -43,4 +43,4 @@ fi
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 # Run gradle
-exec "$JAVACMD" -jar "$CLASSPATH" "$@"
+exec "$JAVACMD" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"

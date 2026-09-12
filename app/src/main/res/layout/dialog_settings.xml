@@ -1,150 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/surface"
+    android:background="@drawable/bg_dialog_root"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="18dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="18dp"
+    android:paddingBottom="20dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_title"
-        android:textColor="@color/text_primary"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Digite o endereço do servidor dsh na sua rede local:"
-        android:textColor="@color/text_secondary"
-        android:textSize="13sp" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutUrl"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:boxStrokeColor="@color/primary"
-        app:hintTextColor="@color/primary"
-        app:placeholderText="http://192.168.0.113:3080/">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editServerUrl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textUri"
-            android:singleLine="true"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/btnResetDefault"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="4dp"
-        android:text="@string/settings_reset"
-        android:textColor="@color/accent"
-        android:textSize="13sp" />
-
-    <!-- Divider separating server URL from updater -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/surface_variant" />
-
-    <!-- Update section header and current version info -->
+    <!-- Header: Indicator Dot + Title -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Atualizações do App"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/dot_indicator" />
 
         <TextView
-            android:id="@+id/txtVersionInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="v1.0.1"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:text="@string/settings_title"
+            android:textColor="@color/dialog_text_title"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCheckUpdates"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Verificar Atualizações"
-        android:textColor="@color/text_primary"
-        app:cornerRadius="10dp"
-        app:icon="@drawable/ic_refresh"
-        app:iconGravity="textStart"
-        app:iconTint="@color/text_primary"
-        app:strokeColor="@color/surface_variant" />
-
-    <!-- Live status and progress container -->
+    <!-- Card 1: Server Address in Local Network -->
     <LinearLayout
-        android:id="@+id/layoutUpdateProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_dialog_card_static"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:padding="14dp">
 
         <TextView
-            android:id="@+id/txtUpdateStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verificando atualizações..."
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp" />
+            android:text="@string/settings_server_address_label"
+            android:textColor="@color/dialog_text_label"
+            android:textSize="12sp" />
 
-        <ProgressBar
-            android:id="@+id/progressBarUpdate"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        <LinearLayout
+            android:id="@+id/containerInputUrl"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:indeterminate="true" />
+            android:background="@drawable/bg_input_field"
+            android:orientation="vertical"
+            android:paddingStart="10dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="9dp">
+
+            <EditText
+                android:id="@+id/editServerUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/settings_url_hint"
+                android:inputType="textUri"
+                android:singleLine="true"
+                android:textColor="@color/dialog_input_text"
+                android:textColorHint="@color/dialog_text_label"
+                android:textSize="13sp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/txtProgressDetail"
+            android:id="@+id/txtUrlError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/error_accent"
             android:textSize="11sp"
             android:visibility="gone" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnActionUpdate"
+        <TextView
+            android:id="@+id/btnResetDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="2dp"
+            android:text="@string/settings_reset"
+            android:textColor="@color/dialog_text_link"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Card 2: App Updates with integrated check & progress -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_dialog_card_static"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Baixar e Instalar"
-            android:textColor="@color/text_primary"
-            android:visibility="gone"
-            app:backgroundTint="@color/primary"
-            app:cornerRadius="10dp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_updates_title"
+                    android:textColor="@color/dialog_input_text"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtVersionInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Versão 1.0.2"
+                    android:textColor="@color/dialog_text_label"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnCheckUpdates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_check"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:text="@string/settings_check"
+                android:textColor="@color/dialog_btn_check_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Integrated Update Progress Section -->
+        <LinearLayout
+            android:id="@+id/layoutUpdateProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/dialog_border" />
+
+            <TextView
+                android:id="@+id/txtUpdateStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buscando atualizações..."
+                android:textColor="@color/dialog_text_label"
+                android:textSize="12sp" />
+
+            <ProgressBar
+                android:id="@+id/progressBarUpdate"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:indeterminate="true"
+                android:progressDrawable="@drawable/progress_bar_update" />
+
+            <TextView
+                android:id="@+id/txtProgressDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/dialog_text_label"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/btnActionUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_btn_primary"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="Baixar e Instalar"
+                android:textColor="@color/dialog_btn_primary_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Card 3: GitHub Repository -->
+    <LinearLayout
+        android:id="@+id/cardGitHub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_dialog_card"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_github_title"
+            android:textColor="@color/dialog_input_text"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/settings_github_url"
+            android:textColor="@color/dialog_text_label"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Footer Actions: Cancelar & Salvar e conectar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_cancel"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/settings_cancel"
+            android:textColor="@color/dialog_btn_cancel_text"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_primary"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/settings_save"
+            android:textColor="@color/dialog_btn_primary_text"
+            android:textSize="13sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
