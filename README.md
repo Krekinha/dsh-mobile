@@ -83,7 +83,7 @@ dsh-mobile/
 
 You can download the pre-compiled APK directly from GitHub Releases:
 1. Go to the [Latest Releases](https://github.com/Krekinha/dsh-mobile/releases/latest) page.
-2. Download `app-debug.apk`.
+2. Download `dsh-mobile-v1.0.2.apk` (or the latest release APK).
 3. Open the file on your Android device and allow installation from unknown sources if prompted.
 
 ### Option 2: In-App Updates
@@ -160,7 +160,7 @@ This repository includes a GitHub Actions workflow (`.github/workflows/build-apk
 - Sets up JDK 17 and executes the unit test suite (`testDebugUnitTest`).
 - Builds the debug APK (`assembleDebug`).
 - Uploads the APK as a workflow artifact.
-- Automatically publishes/updates the `latest` GitHub Release with the newly built `app-debug.apk`.
+- Automatically publishes/updates the GitHub Release with the versioned APK (`dsh-mobile-v<version>.apk`).
 
 ---
 

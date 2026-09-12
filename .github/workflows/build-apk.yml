@@ -61,9 +61,7 @@ jobs:
           body: |
             APK gerado automaticamente pelo GitHub Actions para a versão **v${{ env.APP_VERSION }}**.
 
-            Baixe o arquivo `dsh-mobile-v${{ env.APP_VERSION }}.apk` ou `app-debug.apk` abaixo e instale diretamente no seu dispositivo Android.
-          files: |
-            app/build/outputs/apk/debug/dsh-mobile-v${{ env.APP_VERSION }}.apk
-            app/build/outputs/apk/debug/app-debug.apk
+            Baixe o arquivo `dsh-mobile-v${{ env.APP_VERSION }}.apk` abaixo e instale diretamente no seu dispositivo Android.
+          files: app/build/outputs/apk/debug/dsh-mobile-v${{ env.APP_VERSION }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
