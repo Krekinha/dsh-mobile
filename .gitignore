@@ -10,3 +10,4 @@
 *.apk
 *.aab
 output.json
+*:Zone.Identifier

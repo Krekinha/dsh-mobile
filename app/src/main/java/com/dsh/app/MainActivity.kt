@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.WebSettings
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -17,9 +18,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.dsh.app.databinding.ActivityMainBinding
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appPreferences: AppPreferences
     private lateinit var webChromeClient: DshWebChromeClient
     private lateinit var fileChooserLauncher: ActivityResultLauncher<Intent>
+    private lateinit var updateManager: UpdateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         appPreferences = AppPreferences(this)
+        updateManager = UpdateManager(this)
 
         setupInsets()
         setupBackNavigation()
@@ -164,6 +169,101 @@ class MainActivity : AppCompatActivity() {
         val editServerUrl = dialogView.findViewById<TextInputEditText>(R.id.editServerUrl)
         val inputLayoutUrl = dialogView.findViewById<TextInputLayout>(R.id.inputLayoutUrl)
         val btnResetDefault = dialogView.findViewById<TextView>(R.id.btnResetDefault)
+
+        val txtVersionInfo = dialogView.findViewById<TextView>(R.id.txtVersionInfo)
+        val btnCheckUpdates = dialogView.findViewById<MaterialButton>(R.id.btnCheckUpdates)
+        val layoutUpdateProgress = dialogView.findViewById<View>(R.id.layoutUpdateProgress)
+        val txtUpdateStatus = dialogView.findViewById<TextView>(R.id.txtUpdateStatus)
+        val progressBarUpdate = dialogView.findViewById<ProgressBar>(R.id.progressBarUpdate)
+        val txtProgressDetail = dialogView.findViewById<TextView>(R.id.txtProgressDetail)
+        val btnActionUpdate = dialogView.findViewById<MaterialButton>(R.id.btnActionUpdate)
+
+        val currentVersion = BuildConfig.VERSION_NAME
+        txtVersionInfo.text = "v$currentVersion"
+
+        var latestRelease: ReleaseInfo? = null
+        var downloadedApkFile: File? = null
+
+        btnCheckUpdates.setOnClickListener {
+            layoutUpdateProgress.visibility = View.VISIBLE
+            progressBarUpdate.visibility = View.VISIBLE
+            progressBarUpdate.isIndeterminate = true
+            txtProgressDetail.visibility = View.GONE
+            btnActionUpdate.visibility = View.GONE
+            txtUpdateStatus.text = "Buscando atualizações no GitHub..."
+
+            updateManager.checkForUpdates(currentVersion) { state ->
+                runOnUiThread {
+                    when (state) {
+                        is UpdateState.Checking -> {
+                            txtUpdateStatus.text = "Buscando atualizações no GitHub..."
+                        }
+                        is UpdateState.UpdateAvailable -> {
+                            latestRelease = state.release
+                            val sizeMb = String.format(java.util.Locale.US, "%.1f", state.release.assetSize / (1024.0 * 1024.0))
+                            txtUpdateStatus.text = "Nova versão ${state.release.tagName} disponível ($sizeMb MB)!"
+                            progressBarUpdate.isIndeterminate = false
+                            progressBarUpdate.progress = 0
+                            btnActionUpdate.visibility = View.VISIBLE
+                            btnActionUpdate.text = "Baixar e Instalar"
+                        }
+                        is UpdateState.UpToDate -> {
+                            txtUpdateStatus.text = "Você já está na versão mais recente (v$currentVersion)."
+                            progressBarUpdate.visibility = View.GONE
+                            btnActionUpdate.visibility = View.GONE
+                        }
+                        is UpdateState.Error -> {
+                            txtUpdateStatus.text = state.message
+                            progressBarUpdate.visibility = View.GONE
+                            btnActionUpdate.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+        }
+
+        btnActionUpdate.setOnClickListener {
+            val file = downloadedApkFile
+            if (file != null && file.exists()) {
+                updateManager.installApk(file)
+                return@setOnClickListener
+            }
+
+            val release = latestRelease ?: return@setOnClickListener
+            btnActionUpdate.isEnabled = false
+            progressBarUpdate.visibility = View.VISIBLE
+            progressBarUpdate.isIndeterminate = false
+            txtProgressDetail.visibility = View.VISIBLE
+            txtUpdateStatus.text = "Baixando ${release.tagName}..."
+
+            updateManager.downloadApk(
+                release = release,
+                onProgress = { bytesRead, totalBytes, percent ->
+                    runOnUiThread {
+                        progressBarUpdate.progress = percent
+                        val readMb = String.format(java.util.Locale.US, "%.1f", bytesRead / (1024.0 * 1024.0))
+                        val totalMb = String.format(java.util.Locale.US, "%.1f", totalBytes / (1024.0 * 1024.0))
+                        txtProgressDetail.text = "$readMb MB / $totalMb MB ($percent%)"
+                    }
+                },
+                onComplete = { result ->
+                    runOnUiThread {
+                        btnActionUpdate.isEnabled = true
+                        result.fold(
+                            onSuccess = { apkFile ->
+                                downloadedApkFile = apkFile
+                                txtUpdateStatus.text = "Download concluído! Pronto para instalar."
+                                btnActionUpdate.text = "Instalar APK"
+                                updateManager.installApk(apkFile)
+                            },
+                            onFailure = { error ->
+                                txtUpdateStatus.text = "Erro no download: ${error.message}"
+                            }
+                        )
+                    }
+                }
+            )
+        }
 
         editServerUrl.setText(currentUrl)
         editServerUrl.setSelection(currentUrl.length)
