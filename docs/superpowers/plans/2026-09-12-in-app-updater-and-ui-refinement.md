@@ -314,17 +314,20 @@ git commit -m "feat: add FileProvider configuration and REQUEST_INSTALL_PACKAGES
 
 ---
 
-### Task 4: Reposition Floating Server Button and Add Server Vector Icon
+### Task 4: Reposition Floating Server Button, Add Server Vector Icon, and Remove SwipeRefreshLayout
 
 **Files:**
 - Create: `app/src/main/res/drawable/ic_server.xml`
 - Modify:
   - `app/src/main/res/drawable/bg_settings_fab.xml`
-  - `app/src/main/res/layout/activity_main.xml:90-103`
+  - `app/src/main/res/layout/activity_main.xml`
+  - `app/src/main/java/com/dsh/app/MainActivity.kt`
 
 **Interfaces:**
 - Consumes: `@drawable/ic_server` and updated `@drawable/bg_settings_fab`.
-- Produces: `btnSettings` anchored at `bottom|start`, 32dp x 32dp, above the DSH bottom bar / gear icon.
+- Produces:
+  - `WebView` as direct child in `activity_main.xml` (completely eliminating `SwipeRefreshLayout` touch gesture conflict with vertical scrolling).
+  - `btnSettings` anchored at `bottom|start`, 32dp x 32dp, above the DSH bottom bar / gear icon.
 
 - [ ] **Step 1: Create server vector drawable `ic_server.xml`**
 
@@ -363,11 +366,93 @@ Edit `app/src/main/res/drawable/bg_settings_fab.xml`:
 </ripple>
 ```
 
-- [ ] **Step 3: Update `btnSettings` in `activity_main.xml`**
+- [ ] **Step 3: Update `activity_main.xml` to remove SwipeRefreshLayout and reposition btnSettings**
 
 Edit `app/src/main/res/layout/activity_main.xml`:
-Change `btnSettings` to:
 ```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- Direct WebView without SwipeRefreshLayout to avoid scroll conflicts -->
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never" />
+
+    <!-- Error state view when server is unreachable -->
+    <LinearLayout
+        android:id="@+id/layoutError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/desc_offline"
+            android:src="@drawable/ic_wifi_off" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/error_title"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/error_message"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRetry"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:text="@string/error_retry"
+                android:textColor="@color/text_primary"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_refresh"
+                app:iconGravity="textStart"
+                app:iconTint="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeUrl"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/error_change_url"
+                android:textColor="@color/text_primary"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/surface_variant" />
+        </LinearLayout>
+
+    </LinearLayout>
+
     <!-- Translucent server settings button at bottom-left -->
     <ImageButton
         android:id="@+id/btnSettings"
@@ -382,13 +467,19 @@ Change `btnSettings` to:
         android:padding="6dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_server" />
+
+</FrameLayout>
 ```
 
-- [ ] **Step 4: Commit Task 4**
+- [ ] **Step 4: Update `MainActivity.kt` to remove SwipeRefreshLayout references**
+
+In `MainActivity.kt`, remove `setupSwipeRefresh()` call and method, and remove `binding.swipeRefresh` assignments in `setupWebView()` and `loadCurrentUrl()`.
+
+- [ ] **Step 5: Commit Task 4**
 
 ```bash
-git add app/src/main/res/drawable/ic_server.xml app/src/main/res/drawable/bg_settings_fab.xml app/src/main/res/layout/activity_main.xml
-git commit -m "feat: reposition and resize floating settings button with server icon"
+git add app/src/main/res/drawable/ic_server.xml app/src/main/res/drawable/bg_settings_fab.xml app/src/main/res/layout/activity_main.xml app/src/main/java/com/dsh/app/MainActivity.kt
+git commit -m "feat: reposition settings button to bottom-left with server icon and remove SwipeRefreshLayout"
 ```
 
 ---

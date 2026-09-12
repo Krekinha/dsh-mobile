@@ -9,10 +9,11 @@
 
 ## 1. Visão Geral e Objetivos
 
-Este documento especifica a implementação de três melhorias essenciais no aplicativo Android `dsh-mobile`:
+Este documento especifica a implementação de quatro melhorias essenciais no aplicativo Android `dsh-mobile`:
 1. **Subsistema de Atualização In-App:** Adicionar à janela de configurações do servidor uma funcionalidade de verificação de atualizações no GitHub Releases, exibição de tarefas de checagem, barra de progresso do download em tempo real e acionamento direto do instalador nativo do Android.
 2. **Reposicionamento e Redimensionamento do Botão de Servidor:** Mover o botão flutuante de abertura das configurações (anteriormente no canto superior direito, onde cobria elementos da interface do DSH) para o canto inferior esquerdo (acima do botão de configurações do harness e alinhado à barra lateral), reduzir suas dimensões para 32dp e substituir o ícone de engrenagem por um ícone temático de servidor/computador.
 3. **Identidade Visual e Ícone do Aplicativo:** Gerar a suíte completa de ícones de lançador Android (`mipmap-mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`) a partir da imagem `@logo.png` (512×512) e configurar o manifesto do aplicativo.
+4. **Remoção do Pull-to-Refresh (`SwipeRefreshLayout`):** Eliminar o componente `SwipeRefreshLayout` que encapsulava o `WebView`, pois o gesto de puxar para atualizar conflita diretamente com a rolagem vertical (scroll up/down) das mensagens e telas do DSH. O `WebView` passa a ser filho direto do layout principal.
 
 ---
 
